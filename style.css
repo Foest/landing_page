@@ -1,0 +1,31 @@
+.content {
+    display: grid;
+    grid-template-columns: 1fr 2fr 2fr;
+    grid-template-rows: 50px auto;
+    grid-template-areas: 
+      "header header header"
+      "sidebar panel panel"
+      "sidebar panel panel"
+}
+
+.header {
+    background: yellowgreen;
+    grid-area: header;
+}
+
+.sidebar {
+    background: purple;
+    grid-area: sidebar;
+}
+
+.weather-panel {
+    background: red;
+}
+
+.news-panel {
+    background: blue;
+}
+
+.youtube-panel {
+    background: black;
+}
