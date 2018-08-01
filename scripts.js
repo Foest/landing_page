@@ -1,8 +1,13 @@
 const weatherPanel = document.querySelector('.weather-panel');
-const weatherPanelText = weatherPanel.querySelector('p');
 let coords;
 let weatherInfoCurrent;
 let weatherInfoForcast;
+const weatherIcons = {
+    clear: 'https://static.thenounproject.com/png/653889-200.png',
+    clouds: 'https://static.thenounproject.com/png/653891-200.png',
+    rain: 'https://static.thenounproject.com/png/653883-200.png',
+    snow: 'https://static.thenounproject.com/png/655907-200.png'
+}
 
 
 
@@ -11,9 +16,14 @@ function error(e) {
 }
 
 function displayWeather() {
-    if (weatherInfoCurrent) {
-
-        weatherPanelText.textContent = `${weatherInfoCurrent.temp} -- ${weatherInfoCurrent.name} -- ${weatherInfoCurrent.description}`;
+    if(weatherInfoCurrent){
+        let iconLink = weatherIcons.hasOwnProperty((weatherInfoCurrent.description).toLowerCase()) ? weatherIcons[(weatherInfoCurrent.description).toLowerCase()] : weatherIcons['clear'];
+        let icon = weatherPanel.querySelector('#weather-icon');
+        let temp = weatherPanel.querySelector('#weather-temp');
+        let name = weatherPanel.querySelector('#weather-name');
+        temp.textContent = `${weatherInfoCurrent.temp}°F`;
+        icon.src = iconLink;
+        name.textContent = `${weatherInfoCurrent.name}`;
     }
 }
 
@@ -22,11 +32,9 @@ function getWeather() {
     if ('geolocation' in navigator) {
         navigator.geolocation.getCurrentPosition((position) => {
             coords = position.coords;
-            weatherPanelText.textContent = `Looking Up Weather(${coords.latitude},${coords.longitude})`;
             fetch(`https://api.openweathermap.org/data/2.5/forecast?APPID=94e0a125bbf1b5625a0bc4dbe35ea72a&lat=${coords.latitude}&lon=${coords.longitude}`)
                 .then((response) => { return response.json() })
                 .then((json) => {
-                    console.log(json);
                     weatherInfoForecast = {
                     };
                     displayWeather();
@@ -36,7 +44,6 @@ function getWeather() {
             fetch(`https://api.openweathermap.org/data/2.5/weather?APPID=94e0a125bbf1b5625a0bc4dbe35ea72a&lat=${coords.latitude}&lon=${coords.longitude}`)
                 .then((response) => { return response.json() })
                 .then((json) => {
-                    console.log(json);
                     weatherInfoCurrent = {
                         temp: Math.round((parseInt(json.main.temp)) * (9/5) -  459.67),
                         name: json.name,
